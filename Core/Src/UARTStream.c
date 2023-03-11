@@ -68,14 +68,16 @@ Stream_LenType UARTStream_checkTransmitedBytes(OStream* stream) {
     UARTStream* uartStream = (UARTStream*) OStream_getArgs(stream);
 	return OStream_outgoingBytes(stream) - uartStream->TxDMA->Instance->NDTR;
 }
-void UARTStream_receive(IStream* stream, uint8_t* buff, Stream_LenType len) {
+Stream_Result UARTStream_receive(IStream* stream, uint8_t* buff, Stream_LenType len) {
 	UARTStream* uartStream = (UARTStream*) IStream_getArgs(stream);
 	UARTStream_stopReceiveDMA(uartStream);
 	HAL_UART_Receive_DMA(uartStream->HUART, buff, len);
+  return Stream_Ok;
 }
-void UARTStream_transmit(OStream* stream, uint8_t* buff, Stream_LenType len) {
+Stream_Result UARTStream_transmit(OStream* stream, uint8_t* buff, Stream_LenType len) {
 	UARTStream* uartStream = (UARTStream*) OStream_getArgs(stream);
 	//UARTStream_stopTransmitDMA(uartStream);
   //while (__HAL_UART_GET_FLAG(uartStream->HUART, UART_FLAG_TXE) == 0);
 	HAL_UART_Transmit_DMA(uartStream->HUART, buff, len);
+  return Stream_Ok;
 }
